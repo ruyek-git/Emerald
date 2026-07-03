@@ -7,6 +7,7 @@ from pathlib import Path
 
 import yaml
 
+from . import cache as C
 from .runner import run_scanner
 
 
@@ -28,7 +29,7 @@ def _clone(repo: str, dest: Path) -> tuple[bool, str]:
 
 
 def run_target(registry, app: dict, scanners: list[str], workdir: str,
-               progress=None, keys: dict | None = None) -> dict:
+               progress=None, keys: dict | None = None, use_cache: bool = True) -> dict:
     dest = Path(workdir) / app["name"]
     ok, err = _clone(app["repo"], dest)
     out = {"app": app["name"], "language": app.get("language"), "repo": app["repo"], "scanners": {}}
@@ -41,14 +42,23 @@ def run_target(registry, app: dict, scanners: list[str], workdir: str,
             continue
         if progress:
             progress(app["name"], name)
-        out["scanners"][name] = run_scanner(spec, str(dest), app.get("language", ""), keys).to_dict()
+        ck = C.key(str(dest), spec) if use_cache else None
+        cached = C.get(ck) if ck else None
+        if cached is not None:
+            cached["cached"] = True
+            out["scanners"][name] = cached
+            continue
+        res = run_scanner(spec, str(dest), app.get("language", ""), keys).to_dict()
+        if ck and res.get("ok", True) and not res.get("error"):
+            C.put(ck, res)
+        out["scanners"][name] = res
     return out
 
 
-def run_benchmark(registry, apps: list[dict], scanners: list[str],
-                  progress=None, keys: dict | None = None) -> list[dict]:
+def run_benchmark(registry, apps: list[dict], scanners: list[str], progress=None,
+                  keys: dict | None = None, use_cache: bool = True) -> list[dict]:
     results = []
     with tempfile.TemporaryDirectory() as wd:
         for app in apps:
-            results.append(run_target(registry, app, scanners, wd, progress, keys))
+            results.append(run_target(registry, app, scanners, wd, progress, keys, use_cache))
     return results

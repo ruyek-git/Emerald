@@ -42,12 +42,22 @@ def run_scanner(spec, target: str, language: str = "", keys: dict | None = None,
                           seconds=round(time.time() - t0, 1))
 
 
+def _fmt(value, **kw):
+    """Format a command that is either a string template or an argv list."""
+    return [x.format(**kw) for x in value] if isinstance(value, list) else value.format(**kw)
+
+
 def _run_command(spec, target: str, timeout: int) -> list[Finding]:
     with tempfile.TemporaryDirectory() as tmp:
-        output = spec.output.format(target=target, tmp=tmp, output="")
-        cmd = spec.run.format(target=target, tmp=tmp, output=output)
+        kw = dict(target=target, tmp=tmp, output="", scanner_dir=spec.scanner_dir)
+        output = _fmt(spec.output, **kw)
+        kw["output"] = output
+        run = _fmt(spec.run, **kw)
+        # A list is passed through as argv; a string is split OS-aware (backslash
+        # paths on Windows are preserved; POSIX quoting on Linux/Docker).
+        argv = run if isinstance(run, list) else shlex.split(run, posix=(os.name != "nt"))
         env = dict(os.environ, **(spec.env or {}))
-        subprocess.run(shlex.split(cmd), capture_output=True, text=True, env=env, timeout=timeout)
+        subprocess.run(argv, capture_output=True, text=True, env=env, timeout=timeout)
         if not Path(output).exists():
             return []
         return N.normalize(spec.format, output, spec.name, target)

@@ -100,3 +100,21 @@ scanners:
     model: deepseek-chat
     format: emerald-json
     languages: []
+
+  # Agentic variants: the model explores the repo file-by-file over several
+  # rounds, then self-verifies its findings to cut false positives.
+  claude-agent:
+    kind: llm
+    provider: anthropic
+    model: claude-haiku-4-5-20251001
+    mode: agent
+    format: emerald-json
+    languages: []
+
+  gpt-agent:
+    kind: llm
+    provider: openai
+    model: gpt-4o-mini
+    mode: agent
+    format: emerald-json
+    languages: []

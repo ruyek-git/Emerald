@@ -1,0 +1,21 @@
+# Damn Vulnerable NodeJS App - well-known classes (keyword-tolerant labels).
+app: dvna
+items:
+  - desc: SQL injection
+    cwe: CWE-89
+    match: [sql, sqli, injection]
+  - desc: Command injection
+    cwe: CWE-78
+    match: [command, exec, child_process, cmdi]
+  - desc: Insecure deserialization
+    cwe: CWE-502
+    match: [deserial, node-serialize, unserialize]
+  - desc: Cross-site scripting
+    cwe: CWE-79
+    match: [xss, cross-site scripting]
+  - desc: XML external entity (XXE)
+    cwe: CWE-611
+    match: [xxe, external entity]
+  - desc: Server-side request forgery
+    cwe: CWE-918
+    match: [ssrf, request forgery]

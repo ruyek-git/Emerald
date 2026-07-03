@@ -13,6 +13,7 @@ env/
 _work/
 _results/
 _cache/
+.emerald_cache/
 *.sarif
 .env
 .env.*

@@ -1,0 +1,18 @@
+# OWASP NodeGoat maps to the OWASP Top 10 (keyword-tolerant labels).
+app: nodegoat
+items:
+  - desc: Server-side JS injection (eval)
+    cwe: CWE-94
+    match: [eval, code injection, ssji, server-side]
+  - desc: NoSQL injection
+    cwe: CWE-943
+    match: [nosql, injection, mongo, "$where"]
+  - desc: Cross-site scripting
+    cwe: CWE-79
+    match: [xss, cross-site scripting]
+  - desc: Weak password hashing / crypto
+    cwe: CWE-916
+    match: [md5, sha1, weak, crypto, password]
+  - desc: Broken access control
+    cwe: CWE-639
+    match: [access control, idor, authorization]

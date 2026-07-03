@@ -1,0 +1,18 @@
+# Well-known vulnerability classes in dvpwa (keyword-tolerant labels).
+app: dvpwa
+items:
+  - desc: SQL injection
+    cwe: CWE-89
+    match: [sql, sqli, injection]
+  - desc: Cross-site scripting
+    cwe: CWE-79
+    match: [xss, cross-site scripting]
+  - desc: Cross-site request forgery
+    cwe: CWE-352
+    match: [csrf, request forgery]
+  - desc: Server-side template injection
+    cwe: CWE-1336
+    match: [ssti, template injection]
+  - desc: Hardcoded secret / weak session
+    cwe: CWE-798
+    match: [hardcoded, secret, session, weak]

@@ -41,6 +41,8 @@ class ScannerSpec:
     requires: str = ""                          # binary that must exist (kind: command)
     provider: str = ""                          # for kind: llm (anthropic|openai|google|...)
     model: str = ""                             # for kind: llm
+    mode: str = "single"                        # for kind: llm - single | agent
+    scanner_dir: str = ""                       # install dir for a cloned scanner ({scanner_dir})
     meta: dict[str, Any] = field(default_factory=dict)
 
     def supports(self, language: str) -> bool:

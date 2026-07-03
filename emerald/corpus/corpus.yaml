@@ -9,15 +9,18 @@ apps:
   - name: dvpwa
     language: python
     repo: https://github.com/anxolerd/dvpwa
+    ground_truth: ground_truth/dvpwa.yaml
   - name: nodegoat
     language: javascript
     repo: https://github.com/OWASP/NodeGoat
+    ground_truth: ground_truth/nodegoat.yaml
   - name: juice-shop
     language: javascript
     repo: https://github.com/juice-shop/juice-shop
   - name: dvna
     language: javascript
     repo: https://github.com/appsecco/dvna
+    ground_truth: ground_truth/dvna.yaml
   - name: webgoat
     language: java
     repo: https://github.com/WebGoat/WebGoat

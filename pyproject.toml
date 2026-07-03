@@ -21,6 +21,9 @@ dev = ["pytest>=8"]
 [project.scripts]
 emerald = "emerald.cli:main"
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
 [tool.setuptools.packages.find]
 include = ["emerald*"]
 
