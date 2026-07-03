@@ -1,0 +1,79 @@
+# Built-in scanner adapters.
+#
+# Add your own scanner without touching Emerald's code: copy this shape into a
+# file and pass `--scanners path/to/your.yaml`, or drop it in ./scanners/.
+# See docs/ARCHITECTURE.md for the full contract.
+#
+# `{target}` = repo path, `{output}` = where Emerald expects results,
+# `{tmp}` = a scratch dir Emerald creates per run.
+
+scanners:
+  semgrep:
+    kind: command
+    requires: semgrep
+    format: sarif
+    languages: []                      # multi-language
+    run: "semgrep scan --config auto --sarif -o {output} {target}"
+    output: "{tmp}/semgrep.sarif"
+
+  semgrep-owasp:
+    kind: command
+    requires: semgrep
+    format: sarif
+    languages: []
+    run: "semgrep scan --config p/owasp-top-ten --sarif -o {output} {target}"
+    output: "{tmp}/semgrep-owasp.sarif"
+
+  bandit:
+    kind: command
+    requires: bandit
+    format: emerald-json
+    languages: [python]
+    run: "bandit -r {target} -f json -o {output}"
+    output: "{tmp}/bandit.json"
+
+  njsscan:
+    kind: command
+    requires: njsscan
+    format: sarif
+    languages: [javascript, typescript]
+    run: "njsscan --sarif -o {output} {target}"
+    output: "{tmp}/njsscan.sarif"
+
+  gosec:
+    kind: command
+    requires: gosec
+    format: sarif
+    languages: [go]
+    run: "gosec -no-fail -fmt sarif -out {output} {target}/..."
+    output: "{tmp}/gosec.sarif"
+
+  # LLM-as-scanner. Needs the matching provider API key in the environment
+  # (ANTHROPIC_API_KEY / OPENAI_API_KEY / GOOGLE_API_KEY / DEEPSEEK_API_KEY).
+  claude:
+    kind: llm
+    provider: anthropic
+    model: claude-haiku-4-5-20251001
+    format: emerald-json
+    languages: []
+
+  gpt:
+    kind: llm
+    provider: openai
+    model: gpt-4o-mini
+    format: emerald-json
+    languages: []
+
+  gemini:
+    kind: llm
+    provider: google
+    model: gemini-2.0-flash
+    format: emerald-json
+    languages: []
+
+  deepseek:
+    kind: llm
+    provider: deepseek
+    model: deepseek-chat
+    format: emerald-json
+    languages: []
