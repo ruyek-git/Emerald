@@ -27,7 +27,8 @@ def _clone(repo: str, dest: Path) -> tuple[bool, str]:
     return r.returncode == 0, r.stderr[-300:]
 
 
-def run_target(registry, app: dict, scanners: list[str], workdir: str, progress=None) -> dict:
+def run_target(registry, app: dict, scanners: list[str], workdir: str,
+               progress=None, keys: dict | None = None) -> dict:
     dest = Path(workdir) / app["name"]
     ok, err = _clone(app["repo"], dest)
     out = {"app": app["name"], "language": app.get("language"), "repo": app["repo"], "scanners": {}}
@@ -40,13 +41,14 @@ def run_target(registry, app: dict, scanners: list[str], workdir: str, progress=
             continue
         if progress:
             progress(app["name"], name)
-        out["scanners"][name] = run_scanner(spec, str(dest), app.get("language", "")).to_dict()
+        out["scanners"][name] = run_scanner(spec, str(dest), app.get("language", ""), keys).to_dict()
     return out
 
 
-def run_benchmark(registry, apps: list[dict], scanners: list[str], progress=None) -> list[dict]:
+def run_benchmark(registry, apps: list[dict], scanners: list[str],
+                  progress=None, keys: dict | None = None) -> list[dict]:
     results = []
     with tempfile.TemporaryDirectory() as wd:
         for app in apps:
-            results.append(run_target(registry, app, scanners, wd, progress))
+            results.append(run_target(registry, app, scanners, wd, progress, keys))
     return results

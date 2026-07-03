@@ -48,6 +48,29 @@ scanners:
     run: "gosec -no-fail -fmt sarif -out {output} {target}/..."
     output: "{tmp}/gosec.sarif"
 
+  bearer:
+    kind: command
+    requires: bearer
+    format: sarif
+    languages: []
+    run: "bearer scan {target} --format sarif --output {output} --exit-code 0"
+    output: "{tmp}/bearer.sarif"
+
+  trivy:
+    kind: command
+    requires: trivy
+    format: sarif
+    languages: []
+    run: "trivy fs --scanners vuln,secret,misconfig --format sarif --output {output} {target}"
+    output: "{tmp}/trivy.sarif"
+
+  codeql:
+    kind: python
+    module: emerald.adapters.codeql
+    requires: codeql
+    format: emerald-json
+    languages: [python, javascript, typescript, java, csharp, go, cpp, ruby]
+
   # LLM-as-scanner. Needs the matching provider API key in the environment
   # (ANTHROPIC_API_KEY / OPENAI_API_KEY / GOOGLE_API_KEY / DEEPSEEK_API_KEY).
   claude:

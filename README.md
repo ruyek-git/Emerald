@@ -65,11 +65,26 @@ Because a scanner is just a manifest pointing at wherever your tool already
 lives, **your scanner's source never has to enter this repo.** See
 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
+## Dashboard
+
+`docker compose up` (or `streamlit run emerald/app/dashboard.py`) gives you:
+
+- **Scan a repo** — from a GitHub URL, a local path, or a **`.zip` upload**.
+- **Benchmark scanners** — pick vulnerable apps + scanners, get a clickable
+  scorecard (recall vs. ground truth, drill-down, links to the exact line).
+- **Add your own scanner** right in the UI — `command` / `docker` / `python`,
+  or a GitHub repo carrying an `emerald-scanner.yaml` — and it instantly joins
+  every picker.
+- **Bring your own API keys** for the LLM scanners (Claude / GPT / Gemini /
+  DeepSeek), entered per-session and never stored.
+
+Built-in adapters: Semgrep, Bandit, njsscan, gosec, Bearer, Trivy, CodeQL, and
+the four LLM scanners.
+
 ## Status
 
-Early and moving fast. Core engine (normalize + registry + runner + CLI +
-multi-provider LLM adapter) is in; the dashboard, corpus, and scoring are
-landing next. Contributions welcome.
+Early and moving fast — core engine, CLI, clickable dashboard, corpus + scoring,
+and a dozen built-in adapters are in. Contributions welcome.
 
 ## License
 

@@ -16,7 +16,8 @@ from . import normalize as N
 from .models import Finding, ScanResult
 
 
-def run_scanner(spec, target: str, language: str = "", timeout: int = 1800) -> ScanResult:
+def run_scanner(spec, target: str, language: str = "", keys: dict | None = None,
+                timeout: int = 1800) -> ScanResult:
     if not spec.supports(language):
         return ScanResult(spec.name, target, ok=True, skipped=f"unsupported language: {language}")
     if not spec.available():
@@ -27,12 +28,12 @@ def run_scanner(spec, target: str, language: str = "", timeout: int = 1800) -> S
         if spec.kind in ("command", "builtin"):
             findings = _run_command(spec, target, timeout)
         elif spec.kind == "python":
-            findings = _run_python(spec, target)
+            findings = _run_python(spec, target, language)
         elif spec.kind == "docker":
             findings = _run_docker(spec, target, timeout)
         elif spec.kind == "llm":
             from ..adapters.llm import run_llm
-            findings = run_llm(spec, target, language)
+            findings = run_llm(spec, target, language, keys)
         else:
             return ScanResult(spec.name, target, ok=False, error=f"unknown kind: {spec.kind}")
         return ScanResult(spec.name, target, findings=findings, seconds=round(time.time() - t0, 1))
@@ -52,10 +53,13 @@ def _run_command(spec, target: str, timeout: int) -> list[Finding]:
         return N.normalize(spec.format, output, spec.name, target)
 
 
-def _run_python(spec, target: str) -> list[Finding]:
+def _run_python(spec, target: str, language: str = "") -> list[Finding]:
     import importlib
     mod = importlib.import_module(spec.module)
-    raw = mod.scan(target)  # user contract: return list[dict]
+    try:
+        raw = mod.scan(target, language)      # preferred contract
+    except TypeError:
+        raw = mod.scan(target)                # simple contract
     return N.from_emerald_json({"findings": raw}, spec.name, target)
 
 

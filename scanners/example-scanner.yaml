@@ -1,0 +1,30 @@
+# Template for adding your own scanner.
+#
+# Use it one of three ways:
+#   1. CLI:        emerald scan <repo> --scanners scanners/example-scanner.yaml --only my-scanner
+#   2. Dashboard:  Scanners tab -> "Add your own scanner" -> Fill in details
+#   3. GitHub:     name this file `emerald-scanner.yaml` in your repo root, then
+#                  Dashboard -> "Add your own scanner" -> From GitHub
+#
+# Placeholders Emerald fills at run time: {target} {output} {tmp}
+
+scanners:
+  my-scanner:
+    kind: command              # command | docker | python | llm
+    requires: my-scanner       # binary that must be on PATH (command kind)
+    format: sarif              # sarif | emerald-json
+    languages: [python, go]    # omit or [] = all languages
+    run: "my-scanner --sarif -o {output} {target}"
+    output: "{tmp}/my.sarif"
+
+  # Docker example - strongest isolation; the image must write /out/out.sarif:
+  # my-docker-scanner:
+  #   kind: docker
+  #   image: myorg/my-scanner:latest
+  #   format: sarif
+
+  # Python example - a module exposing scan(target, language) -> list[dict]:
+  # my-python-scanner:
+  #   kind: python
+  #   module: my_pkg.my_scanner
+  #   format: emerald-json

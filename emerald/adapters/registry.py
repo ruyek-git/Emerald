@@ -47,7 +47,7 @@ class ScannerSpec:
         return (not self.languages) or (not language) or (language in self.languages)
 
     def available(self) -> bool:
-        if self.kind == "command" and self.requires:
+        if self.requires:                       # gate any kind on a required binary
             return shutil.which(self.requires) is not None
         if self.kind == "docker":
             return shutil.which("docker") is not None

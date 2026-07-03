@@ -65,9 +65,11 @@ def _call(provider: str, model: str, key: str, base_url: str, system: str, user:
     return r.choices[0].message.content
 
 
-def run_llm(spec, target: str, language: str = "") -> list[Finding]:
+def run_llm(spec, target: str, language: str = "", keys: dict | None = None) -> list[Finding]:
     provider = spec.provider or "openai"
-    key = os.environ.get(KEY_ENV.get(provider, ""), "") or os.environ.get("EMERALD_LLM_KEY", "")
+    key = ((keys or {}).get(provider)
+           or os.environ.get(KEY_ENV.get(provider, ""), "")
+           or os.environ.get("EMERALD_LLM_KEY", ""))
     if not key:
         raise RuntimeError(f"no API key for provider '{provider}' "
                            f"(set {KEY_ENV.get(provider, 'the provider key')})")
