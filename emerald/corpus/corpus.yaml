@@ -1,0 +1,26 @@
+# Deliberately-vulnerable apps for the benchmark-a-scanner mode.
+# Referenced by URL only - never vendored. Add your own freely.
+
+apps:
+  - name: pygoat
+    language: python
+    repo: https://github.com/adeyosemanputra/pygoat
+    ground_truth: ground_truth/pygoat.yaml
+  - name: dvpwa
+    language: python
+    repo: https://github.com/anxolerd/dvpwa
+  - name: nodegoat
+    language: javascript
+    repo: https://github.com/OWASP/NodeGoat
+  - name: juice-shop
+    language: javascript
+    repo: https://github.com/juice-shop/juice-shop
+  - name: dvna
+    language: javascript
+    repo: https://github.com/appsecco/dvna
+  - name: webgoat
+    language: java
+    repo: https://github.com/WebGoat/WebGoat
+  - name: govwa
+    language: go
+    repo: https://github.com/0c34/govwa

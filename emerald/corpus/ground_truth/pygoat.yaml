@@ -1,0 +1,35 @@
+# Emerald's own labelled vulnerabilities for PyGoat, used to compute recall.
+# `file` = a path substring the finding must sit under; `match` = keywords that
+# must appear in the finding's rule or message. A vuln counts as caught if a
+# finding matches both.
+
+app: pygoat
+items:
+  - desc: Remote code execution via eval
+    cwe: CWE-95
+    file: introduction
+    match: [eval, rce, code injection, codeinj, code-execution]
+  - desc: OS command injection
+    cwe: CWE-78
+    file: introduction
+    match: [command, os.system, subprocess, cmdi, command-injection]
+  - desc: Insecure deserialization (pickle/yaml)
+    cwe: CWE-502
+    file: introduction
+    match: [pickle, deserial, yaml.load, insecure-deserialization]
+  - desc: SQL injection
+    cwe: CWE-89
+    file: introduction
+    match: [sql, sqli, injection]
+  - desc: Weak hashing (MD5)
+    cwe: CWE-327
+    file: introduction
+    match: [md5, weak, hash, crypto, insecure-hash]
+  - desc: Server-side template injection
+    cwe: CWE-1336
+    file: introduction
+    match: [ssti, template injection, render_template_string]
+  - desc: Server-side request forgery
+    cwe: CWE-918
+    file: introduction
+    match: [ssrf, request forgery, urlopen, requests.get]

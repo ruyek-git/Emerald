@@ -1,0 +1,5 @@
+# Keep the repo LF-normalized across platforms.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.pdf binary
