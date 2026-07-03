@@ -15,10 +15,18 @@ from .models import Finding, norm_severity
 
 
 def _rel(path: str, target: str) -> str:
+    """Make a scanner path repo-relative. Prefix-based (not substring) so a
+    target string appearing mid-path can't mangle the file name."""
     p = (path or "").replace("\\", "/")
-    t = (target or "").replace("\\", "/")
-    i = p.find(t)
-    return p[i + len(t):].lstrip("/") if (t and i >= 0) else p.lstrip("/")
+    t = (target or "").replace("\\", "/").rstrip("/")
+    if not t:
+        return p.lstrip("/")
+    if p.startswith(t):                       # absolute path under the target
+        return p[len(t):].lstrip("/")
+    base = t.rsplit("/", 1)[-1]
+    if base and p.startswith(base + "/"):     # relative path prefixed with the clone dir name
+        return p[len(base) + 1:]
+    return p.lstrip("/")                       # already relative
 
 
 def _load(source):
